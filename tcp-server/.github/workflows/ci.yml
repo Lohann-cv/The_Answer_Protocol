@@ -1,0 +1,122 @@
+name: CI
+
+# The pipline will be launch on each push and pr on main and dev branch
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main, dev ]
+
+# In case of error the error message will be colorize and full
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+    # Fmt check
+  format:
+    name: Format Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4 # dl code base
+
+      - uses: dtolnay/rust-toolchain@stable # dl rustc
+        with:
+          components: rustfmt
+
+      - run: cargo fmt --all -- --check
+
+  clippy:
+    name: Clippy Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+
+      - uses: Swatinem/rust-cache@v2
+
+      - run: cargo clippy --all-targets --all-features -- -D warnings
+
+  build-release:
+    name: Build (Release)
+    needs: [format, clippy]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+
+      - run: cargo build --release --all
+
+  # Execute the test
+  test:
+    name: Tests
+    needs: [format, clippy]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+
+      - run: cargo test --all --verbose
+
+      - run: cargo test --all --doc
+
+  # Check if used crate have security issue
+  security:
+    name: Security Audit
+    needs: [format, clippy]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: rustsec/audit-check-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  # Check if the code has enough coverage (unitary test)
+  coverage:
+    name: Code Coverage
+    needs: [format, clippy]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+
+      - uses: taiki-e/install-action@cargo-tarpaulin
+
+      - run: cargo tarpaulin --all --out Xml --exclude-files tests/*
+
+      # it creat a nice graph
+      - uses: codecov/codecov-action@v3
+        with:
+          files: ./cobertura.xml
+
+  docs:
+    name: Documentation
+    needs: [format, clippy]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+
+      - run: cargo doc --all --no-deps
+        env:
+          RUSTDOCFLAGS: -D warnings
