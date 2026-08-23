@@ -1,7 +1,11 @@
+use super::HEALTH_MULTIPLIER;
 use crate::world::map::WorldId;
+use serde::{Deserialize, Serialize};
 
+#[derive(Clone, Copy, Debug, Serialize, Deserialize, ParialEq, Eq)]
 pub struct PlayerId(pub u32);
 
+#[derive(Clone, Copy, Debug, Serialize, Deserialize, ParialEq, Eq)]
 pub enum PlayerClass {
     Warrior,
     Mage,
@@ -12,6 +16,7 @@ pub enum PlayerClass {
     Thief,
 }
 
+#[derive(Clone, Copy, Debug, Serialize, Deserialize, ParialEq, Eq)]
 pub struct Stats {
     pub strength: u32,
     pub agility: u32,
@@ -76,6 +81,7 @@ impl Stats {
     }
 }
 
+#[derive(Clone, Copy, Debug, Serialize, Deserialize, ParialEq, Eq)]
 pub struct Player {
     pub id: PlayerId,
     pub level: u32,
@@ -90,7 +96,7 @@ pub struct Player {
 impl Player {
     pub fn new(id: PlayerId, class: PlayerClass) -> Self {
         let stats = Stats::new(class);
-        let max_health = stats.stamina * 10;
+        let max_health = stats.stamina * HEALTH_MULTIPLIER;
         Player {
             id,
             level: 1,
@@ -101,5 +107,16 @@ impl Player {
             class,
             stats,
         }
+    }
+
+    pub fn is_alive(&self) -> bool {
+        self.health > 0
+    }
+
+    pub fn reset(&mut self) {
+        self.level = 1;
+        self.experience = 0;
+        self.health = self.max_health;
+        self.position = WorldId(0);
     }
 }

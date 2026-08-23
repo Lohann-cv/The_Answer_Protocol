@@ -1,5 +1,4 @@
-use crate::class::Player;
-use crate::class::PlayerClass;
+use super::{Player, PlayerClass};
 use crate::combat::calculator::{heal, take_damage};
 
 impl Player {
