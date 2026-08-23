@@ -1,7 +1,6 @@
 [workspace]
-member = ["server", "client"]
+member = ["server", "client", "tcp-core"]
 resolver = 2
-members = ["server"]
 
 [workspace.dependencies]
 tokio = { version = "1.40", features = ["full"] }
