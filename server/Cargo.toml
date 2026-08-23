@@ -7,5 +7,5 @@ authors = ["lcoant--"]
 [dependencies]
 
 [[bin]]
-name = "tcp-server"
+name = "server"
 path = "src/main.rs"

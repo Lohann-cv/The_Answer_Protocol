@@ -11,5 +11,5 @@ name = "server"
 version = "0.1.0"
 
 [[package]]
-name = "shared"
+name = "tap-core"
 version = "0.1.0"

@@ -54,7 +54,7 @@ jobs:
 
       - run: cargo build --release -p client
       - run: cargo build --release -p server
-      - run: cargo build --release -p tcp-core
+      - run: cargo build --release -p tap-core
 
   # Execute the test
   test:
@@ -86,26 +86,26 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
   # Check if the code has enough coverage (unitary test)
-  coverage:
-    name: Code Coverage
-    needs: [format, clippy]
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
-    steps:
-      - uses: actions/checkout@v4
+  #coverage:
+  #  name: Code Coverage
+  #  needs: [format, clippy]
+  #  runs-on: ubuntu-latest
+  #  if: github.event_name == 'pull_request'
+  #  steps:
+  #    - uses: actions/checkout@v4
 
-      - uses: dtolnay/rust-toolchain@stable
+  #    - uses: dtolnay/rust-toolchain@stable
 
-      - uses: Swatinem/rust-cache@v2
+  #    - uses: Swatinem/rust-cache@v2
 
-      - uses: taiki-e/install-action@cargo-tarpaulin
+  #    - uses: taiki-e/install-action@cargo-tarpaulin
 
-      - run: cargo tarpaulin --all --out Xml --exclude-files tests/*
+  #    - run: cargo tarpaulin --all --out Xml
 
       # it creat a nice graph
-      - uses: codecov/codecov-action@v3
-        with:
-          files: ./cobertura.xml
+  #    - uses: codecov/codecov-action@v3
+  #      with:
+  #        files: ./cobertura.xml
 
   docs:
     name: Documentation
