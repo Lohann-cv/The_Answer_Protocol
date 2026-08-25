@@ -1,8 +1,7 @@
 use super::{Player, PlayerClass};
-use crate::combat::calculator::{heal, take_damage};
 
 impl Player {
-    pub fn attack(&self, target: &mut Player) {
+    pub fn attack(&mut self, target: &mut Player) {
         match self.class {
             PlayerClass::Warrior => {
                 let damage = self.stats.strength * 2;
@@ -35,7 +34,7 @@ impl Player {
         }
     }
 
-    pub fn special_ability(&self, target: &mut Player) {
+    pub fn special_ability(&mut self, target: &mut Player) {
         match self.class {
             PlayerClass::Warrior => {
                 let damage = self.stats.strength * 5;

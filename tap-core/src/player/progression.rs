@@ -2,8 +2,8 @@
 //! The level up is exponentially hard to get
 //! For now in this version the player leftover EXP isn't kept when leveling up
 
+use super::Player;
 use super::{BASE_EXP_REQUIRED, HEALTH_MULTIPLIER, MAX_LEVEL};
-use super::{Player, PlayerClass, Stats};
 
 impl Player {
     /// Levels up the player.
@@ -14,7 +14,7 @@ impl Player {
     /// # Examples
     ///
     /// ```
-    /// # use tap_core::player::class::{Player, PlayerId, PlayerClass};
+    /// # use tap_core::{Player, PlayerId, PlayerClass};
     ///
     /// // We create a player that is level 1
     /// let mut player = Player::new(PlayerId(1), PlayerClass::Warrior);
@@ -45,8 +45,7 @@ impl Player {
     /// # Examples
     ///
     /// ```
-    /// # use tap_core::player::class::{Player, PlayerId, PlayerClass};
-    /// # use tap_core::player::BASE_EXP_REQUIRED;
+    /// # use tap_core::{Player, PlayerId, PlayerClass, BASE_EXP_REQUIRED};
     ///
     /// // We create a player that is level 1
     /// let mut player = Player::new(PlayerId(1), PlayerClass::Warrior);

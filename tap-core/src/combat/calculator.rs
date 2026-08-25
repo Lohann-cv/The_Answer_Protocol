@@ -1,4 +1,4 @@
-use crate::class::Player;
+use crate::player::Player;
 
 impl Player {
     pub fn take_damage(&mut self, amount: u32) {

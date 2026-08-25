@@ -3,7 +3,7 @@
 //! so that you don't import all the player infos
 
 use super::HEALTH_MULTIPLIER;
-use crate::world::map::WorldId;
+use crate::world::WorldId;
 use serde::{Deserialize, Serialize};
 
 /// The struct that represent the player's id.
@@ -11,7 +11,7 @@ use serde::{Deserialize, Serialize};
 pub struct PlayerId(pub u32);
 
 /// The different classes that the users can pick.
-/// 
+///
 /// Each classes will influence the gameplay.
 /// For example, a warrior will focus on damage.
 /// And a healer will do little to no damage but is able to heal.
@@ -34,7 +34,7 @@ pub enum PlayerClass {
 }
 
 /// The player's statistic.
-/// 
+///
 /// Each player will have stats based on its class.
 /// The stats will evolve throughout the game.
 #[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq, Eq)]
@@ -53,13 +53,15 @@ pub struct Stats {
 
 impl From<PlayerClass> for Stats {
     /// The function that will set the player's base stats.
-    /// 
+    ///
     /// It takes the player chosen class as its parameter.
     /// The stats are implemented for the player.
-    /// 
+    ///
     /// # Examples
-    /// 
+    ///
     /// ```
+    /// # use tap_core::{Stats, PlayerClass};
+    ///
     /// // With from()
     /// let stats = Stats::from(PlayerClass::Warrior);
     /// assert_eq!(stats.strength, 10);
@@ -149,12 +151,14 @@ pub struct Player {
 
 impl Player {
     /// Creates a new player from an ID and a chosen class.
-    /// 
+    ///
     /// The player starts at level 1 with full health based on their class stamina.
-    /// 
+    ///
     /// # Examples
-    /// 
+    ///
     /// ```
+    /// # use tap_core::{PlayerId, Player, PlayerClass};
+    ///
     /// let player = Player::new(PlayerId(1), PlayerClass::Tank);
     /// assert_eq!(player.level, 1);
     /// assert!(player.is_alive());
@@ -195,7 +199,7 @@ impl Player {
 
 #[cfg(test)]
 mod tests {
-    use super::*; 
+    use super::*;
 
     #[test]
     fn test_stats_conversion() {
@@ -212,11 +216,11 @@ mod tests {
     fn test_player_initialization() {
         // Basic player initialization
         let player = Player::new(PlayerId(42), PlayerClass::Tank);
-        
+
         assert_eq!(player.id, PlayerId(42));
         assert_eq!(player.level, 1);
         assert!(player.is_alive());
-        
+
         // The player health is a resultant of a computation
         assert_eq!(player.max_health, player.stats.stamina * HEALTH_MULTIPLIER);
         assert_eq!(player.health, player.max_health);
