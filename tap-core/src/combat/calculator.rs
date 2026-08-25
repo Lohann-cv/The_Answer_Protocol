@@ -55,3 +55,59 @@ impl Player {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{PlayerClass, PlayerId};
+
+    /// Utils function to create a player
+    fn create_test_player() -> Player {
+        Player::new(PlayerId(1), PlayerClass::Tank)
+    }
+
+    #[test]
+    fn test_take_damage_normal() {
+        let mut player = create_test_player();
+        let initial_health = player.health;
+
+        // basic damage
+        player.take_damage(10);
+        assert_eq!(player.health, initial_health - 10);
+    }
+
+    #[test]
+    fn test_take_damage_lethal() {
+        let mut player = create_test_player();
+
+        // The player is overkill
+        player.take_damage(player.max_health + 100);
+
+        // But is safely caped at 0 HP
+        assert_eq!(player.health, 0);
+    }
+
+    #[test]
+    fn test_heal_normal() {
+        let mut player = create_test_player();
+
+        // The player takes damage
+        player.health -= 20;
+        let wounded_health = player.health;
+
+        // And is healed
+        player.heal(5);
+        assert_eq!(player.health, wounded_health + 5);
+    }
+
+    #[test]
+    fn test_heal_overheal() {
+        let mut player = create_test_player();
+
+        // The player is full life
+        player.heal(50);
+
+        // So the healing spell dosn't change anything
+        assert_eq!(player.health, player.max_health);
+    }
+}
