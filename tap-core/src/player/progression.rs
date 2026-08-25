@@ -66,3 +66,43 @@ impl Player {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{PlayerClass, PlayerId};
+
+    /// A function to create a player
+    fn create_warrior() -> Player {
+        Player::new(PlayerId(1), PlayerClass::Warrior)
+    }
+
+    #[test]
+    fn test_exp_gain_without_level_up() {
+        let mut player = create_warrior();
+        assert_eq!(player.level, 1);
+
+        player.gain_experience(BASE_EXP_REQUIRED - 1);
+        assert_eq!(player.level, 1);
+        assert_eq!(player.experience, BASE_EXP_REQUIRED - 1);
+    }
+
+    #[test]
+    fn test_exp_gain_and_level_up() {
+        let mut player = create_warrior();
+        assert_eq!(player.level, 1);
+
+        player.gain_experience(BASE_EXP_REQUIRED);
+        assert_eq!(player.level, 2);
+    }
+
+    #[test]
+    fn test_exp_gain_above_needed() {
+        let mut player = create_warrior();
+        assert_eq!(player.level, 1);
+
+        player.gain_experience(BASE_EXP_REQUIRED + 50);
+        assert_eq!(player.level, 2);
+        assert_eq!(player.experience, 0);
+    }
+}
