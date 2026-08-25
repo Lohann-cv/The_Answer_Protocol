@@ -1,9 +1,13 @@
+//! This module hold all the player logic
+//! To acces a player you should use its PlayerId
+//! so that you don't import all the player infos
+
 use super::HEALTH_MULTIPLIER;
 use crate::world::map::WorldId;
 use serde::{Deserialize, Serialize};
 
 /// The struct that represent the player's id.
-#[derive(Clone, Copy, Debug, Serialize, Deserialize, ParialEq, Eq)]
+#[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq, Eq)]
 pub struct PlayerId(pub u32);
 
 /// The different classes that the users can pick.
@@ -33,7 +37,7 @@ pub enum PlayerClass {
 /// 
 /// Each player will have stats based on its class.
 /// The stats will evolve throughout the game.
-#[derive(Clone, Copy, Debug, Serialize, Deserialize, ParialEq, Eq)]
+#[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Stats {
     /// The strength that will be used by the warrior.
     pub strength: u32,
@@ -133,7 +137,7 @@ pub struct Player {
     pub experience: u32,
     /// The player's current health.
     pub health: u32,
-    /// The maximum health, the health cannot exceed this calue.
+    /// The maximum health, the health cannot exceed this value.
     pub max_health: u32,
     /// The world where the player is.
     pub position: WorldId,
@@ -186,5 +190,35 @@ impl Player {
         self.experience = 0;
         self.health = self.max_health;
         self.position = WorldId(0);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*; 
+
+    #[test]
+    fn test_stats_conversion() {
+        // Basic stats creation
+        let warrior_stats = Stats::from(PlayerClass::Warrior);
+        assert_eq!(warrior_stats.strength, 10);
+        assert_eq!(warrior_stats.luck, 2);
+
+        let mage_stats: Stats = PlayerClass::Mage.into();
+        assert_eq!(mage_stats.intelligence, 10);
+    }
+
+    #[test]
+    fn test_player_initialization() {
+        // Basic player initialization
+        let player = Player::new(PlayerId(42), PlayerClass::Tank);
+        
+        assert_eq!(player.id, PlayerId(42));
+        assert_eq!(player.level, 1);
+        assert!(player.is_alive());
+        
+        // The player health is a resultant of a computation
+        assert_eq!(player.max_health, player.stats.stamina * HEALTH_MULTIPLIER);
+        assert_eq!(player.health, player.max_health);
     }
 }
