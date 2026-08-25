@@ -1,5 +1,7 @@
-use serde::{Deserialize, Serialize};
+use super::NpcId;
 use crate::items::ItemId;
+use crate::quest::QuestId;
+use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq, Eq)]
 pub struct WorldId(pub u32);
@@ -7,25 +9,25 @@ pub struct WorldId(pub u32);
 #[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq, Eq)]
 pub struct RoomId(pub u32);
 
-#[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 pub struct WorldMap {
-    id: WorldId,
-    name: str,
-    description: str,
-    rooms: Vector<RoomId>,
+    pub id: WorldId,
+    pub name: String,
+    pub description: String,
+    pub rooms: Vec<RoomId>,
 }
 
-#[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Room {
-    id: RoomId,
-    name: str,
-    description: str,
-    items: Vector<ItemId>,
-    npcs: Vector<NPC>,
-    quests: Vector<Quest>,
-    exits: RoomExit,
-    is_safe: bool,
-    world_exit: bool,
+    pub id: RoomId,
+    pub name: String,
+    pub description: String,
+    pub items: Vec<ItemId>,
+    pub npcs: Vec<NpcId>,
+    pub quests: Vec<QuestId>,
+    pub exits: RoomExit,
+    pub is_safe: bool,
+    pub world_exit: bool,
 }
 
 #[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq, Eq)]
