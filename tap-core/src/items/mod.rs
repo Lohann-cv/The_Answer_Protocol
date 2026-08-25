@@ -1,3 +1,3 @@
-mod items;
+mod item;
 
-use items::{Item, ItemId};
+pub use item::{Item, ItemId};
