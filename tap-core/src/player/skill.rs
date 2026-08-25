@@ -113,3 +113,66 @@ impl Player {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::PlayerId;
+
+    /// Utils function to create a target
+    fn create_dummy_target() -> Player {
+        Player::new(PlayerId(99), PlayerClass::Tank)
+    }
+
+    #[test]
+    fn test_warrior_basic_attack() {
+        let mut warrior = Player::new(PlayerId(1), PlayerClass::Warrior);
+        let mut target = create_dummy_target();
+
+        let initial_health = target.health;
+
+        // We attack the target
+        warrior.attack(&mut target);
+
+        // The warrior has 10 of strenght. The damage are of 10 * 2 = 20.
+        // The target should loose 20 HP.
+        let expected_damage = warrior.stats.strength * 2;
+        assert_eq!(target.health, initial_health - expected_damage);
+    }
+
+    #[test]
+    fn test_mage_special_ability() {
+        let mut mage = Player::new(PlayerId(1), PlayerClass::Mage);
+        let mut target = create_dummy_target();
+
+        let initial_health = target.health;
+
+        mage.special_ability(&mut target);
+
+        // The mage is the best in attack with the thief
+        let expected_damage = mage.stats.intelligence * 6;
+        assert_eq!(target.health, initial_health - expected_damage);
+    }
+
+    #[test]
+    fn test_healer_self_heals_instead_of_attacking() {
+        let mut healer = Player::new(PlayerId(1), PlayerClass::Healer);
+        let mut target = create_dummy_target();
+
+        let target_initial_health = target.health;
+
+        // We harm the healer
+        healer.health -= 25;
+        let healer_wounded_health = healer.health;
+
+        // It attack
+        healer.attack(&mut target);
+
+        // And the target is unharmed
+        assert_eq!(target.health, target_initial_health);
+
+        // But the healer is healed
+        let expected_healing = healer.stats.intelligence * 2;
+        assert_eq!(healer.health, healer_wounded_health + expected_healing);
+    }
+}
