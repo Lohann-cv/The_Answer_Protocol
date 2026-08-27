@@ -7,7 +7,7 @@ use crate::world::WorldId;
 use serde::{Deserialize, Serialize};
 
 /// The struct that represent the player's id.
-#[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq, Eq, Default)]
 pub struct PlayerId(pub u32);
 
 /// The different classes that the users can pick.
@@ -194,6 +194,12 @@ impl Player {
         self.experience = 0;
         self.health = self.max_health;
         self.position = WorldId(0);
+    }
+}
+
+impl Default for Player {
+    fn default() -> Self {
+        Self::new(PlayerId::default(), PlayerClass::Tank)
     }
 }
 
