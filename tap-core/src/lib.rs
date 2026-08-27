@@ -6,5 +6,5 @@ mod world;
 
 pub use items::{Item, ItemId};
 pub use player::{BASE_EXP_REQUIRED, Player, PlayerClass, PlayerId, Stats};
-pub use quest::{Quest, QuestId};
-pub use world::{Npc, NpcId, Room, RoomId, WorldId, WorldMap};
+pub use quest::{Quest, QuestId, QuestManager};
+pub use world::{Npc, NpcId, Room, RoomId, WorldId, WorldMap, WorldStock};
